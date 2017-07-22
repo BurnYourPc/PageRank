@@ -13,6 +13,10 @@ __pycache__/
 .idea
 .\.idea
 \.idea
+\tcl
+
+.idea
+pip_shelfcheck.json
 
 # Distribution / packaging
 .Python
@@ -97,3 +101,9 @@ ENV/
 
 # Rope project settings
 .ropeproject
+pip-selfcheck.json
+.idea/misc.xml
+.idea/modules.xml
+*.xml
+.idea/workspace.xml
+.idea/vcs.xml
