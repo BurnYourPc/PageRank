@@ -10,7 +10,9 @@ __pycache__/
 /Scripts
 /Include
 /.idea
-
+.idea
+.\.idea
+\.idea
 
 # Distribution / packaging
 .Python
