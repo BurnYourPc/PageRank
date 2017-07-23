@@ -35,18 +35,5 @@ def find_outlinks(link, length, n):
     return inlinks2, outlinks
 
 
-# def append_outlinks(link):
-#     for i in link:
-
-
-def find_oulinks3(link):
-    outlink = []
-
-
-
-def find_outlinks2(links):
-    for link in links:
-        inlinks, outlinks = split_links(link)
-    return outlinks
 
 print(find_outlinks('http://www.sport24.gr/', len('http://www.sport24.gr/'), 1))
