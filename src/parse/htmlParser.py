@@ -6,13 +6,26 @@ import urllib.request as url
 
 
 def parse(urlToParse):
+    html_page=[]
     try:
         html_page = url.urlopen(urlToParse)
     except HTTPError as e:
-        print("Not a valid url", e.code)
+        print("Not a valid url")
     except URLError as e:
-        print("Not a valid url", e.code)
+        print("Not a valid url")#, e.code)
     return html_page
+
+
+def isParsable(link):
+    try:
+        html_page = url.urlopen(link)
+    except HTTPError as e:
+        print("Not a valid url")#, e.code)
+        return False
+    except URLError as e:
+        print("Not a valid url")
+        return False
+    return True
 
 
 def make_soup(html_page):
