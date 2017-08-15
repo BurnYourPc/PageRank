@@ -8,7 +8,7 @@ def split_links(link,parser):
     outlinks = []
     link=str(link)
     print(link)
-    if ("–" in link):
+    if ( ("–" in link) or (" " in link) ):
        return inlinks, outlinks
     #print(parse.isParsable(link))
     if (parse.isParsable(link)):
@@ -25,9 +25,11 @@ def split_links(link,parser):
         #print(check.count("."))
         if (check.count(".")==2):
             www, link2check, dom = check.split(".")
-        else:
+        elif (check.count(".")==1):
             #print("hello")
             link2check, dom = check.split(".")
+        else:
+            www, link2check, blog, dom = check.split(".")
     
         for index in links:
             index=str(index)
