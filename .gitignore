@@ -108,3 +108,4 @@ pip-selfcheck.json
 .idea/workspace.xml
 .idea/vcs.xml
 .idea
+.gitattributes
