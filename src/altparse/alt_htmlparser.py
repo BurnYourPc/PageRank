@@ -4,9 +4,6 @@ import urllib.request as url
 import lxml.html
 
 def get_links(html_page):
-    #connection = url.urlopen(link)
-    #html_page=parse(link)
-
     dom =  lxml.html.fromstring(html_page.read())
     outlinks=[]
     for link in dom.xpath('//a/@href'):
@@ -27,4 +24,3 @@ def parse(urlToParse):
     
     return t, html_page
 
-#Sprint(get_links('http://www.sport24.gr/'))

@@ -1,6 +1,7 @@
 from src.parse import htmlParser as parse
 from src.purifier import purifier as pure
 from src.uniq_purifier import unqpurifier as unqpure
+from src.createPdf import pdfcreator as PdfC
 import os
 import numpy as np
 from numpy import linalg as LA
@@ -35,7 +36,8 @@ def sitesGui(numSites):
         urls2=urls
         col=0
         for link in urls:
-            checkin, outlinks=unqpure.find_outlinks(link, False, 1)
+            basetocheck=unqpure.getBaseToCheck(link)
+            checkin, outlinks=unqpure.find_outlinks(link, False, basetocheck, 1)
             print(outlinks)
             if (checkin):
                 A[col,col]=1
@@ -124,6 +126,7 @@ print(" ")
 answer=input("Sites in txt[1] or input-window[2]\n")
 answer=int(answer)
 path=os.path.dirname(os.path.abspath("."))
+print(path)
 if (answer==1):
     input("Edit the 'sites.txt' in getRanking folder and press enter\n")
     path2txt=path[0:len(path)-3]+'getRanking/sites.txt'
@@ -138,6 +141,9 @@ if (answer==1):
     print(urls)
     ranking= rankUrls(urls,counter)
     print(ranking)
+    source=path+'/main'
+    destination=path[0:len(path)-3]+'getRanking'
+    PdfC.CreateSudoPdf(ranking,urls,source,destination)
 elif (answer==2):
     num=input("How many sites do you want to rank?\n")
     num=int(num)

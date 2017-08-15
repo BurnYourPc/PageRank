@@ -10,7 +10,6 @@ def split_links(link, basetocheck, parser):
     print(link)
     if ( ("–" in link) or (" " in link) ):
        return inlinks, outlinks
-    #if (parse.isParsable(link)):
     
     if (parser==1):
         t, html_page = parse.parse(link)
@@ -78,13 +77,11 @@ def find_outlinks(link, checkin, basetocheck, n):
         return checkin, outlinks
     count=0
     for i in inlinks:
-        # find_outlinks()
         count=count+1
         print(count)
         ch, outlink = find_outlinks(i, checkin, basetocheck, n+1)
         for j in outlink:
             if j not in outlinks:
-                # inlinks.append(j)
                 outlinks.append(j)
     return checkin, outlinks
 
@@ -103,30 +100,3 @@ def getBaseToCheck(link):
     return link2check
 
 
-#link=
-#print(getBaseToCheck(link))
-#bs2ch=getBaseToCheck(link)
-#print(split_links(link, bs2ch, 1)[0])
-#in2, out = find_outlinks(link, False, bs2ch, 1)
-#print(out)
-#print(find_outlinks('http://www.sport24.gr/', len('http://www.sport24.gr/'), 1))
-#link='http://www.sport24.gr/'
-#print(clean_links(split_links('http://www.sport24.gr/', len('http://www.sport24.gr/'))[1],link))
-#inlinks=split_links('http://www.sport24.gr/',2)[1]
-#print(inlinks)
-#out1=split_links('http://www.sport24.gr/',1)[1]
-#print(" ")
-#print(out1)
-#in2, out2= find_outlinks('http://www.sport24.gr/',False,1)
-#print(in2)
-#print(" ")
-#print(out2)
-#print(split_links('http://www.sport24.gr/')[1])
-#splited = urlsplit(link)
-#print(splited)
-#base = "{0.scheme}://{0.netloc}/".format(splited)
-#print(base)
-#check = "{0.netloc}".format(urlsplit(link))
-#print(check)
-#www, link, dom = check.split(".")
-#print(www,link,dom)
