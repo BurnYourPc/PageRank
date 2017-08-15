@@ -3,48 +3,42 @@ from src.altparse import alt_htmlparser as altparse
 from urllib.parse import urlsplit, urlunsplit
 
 
-def split_links(link,parser):
+def split_links(link, basetocheck, parser):
     inlinks = []
     outlinks = []
     link=str(link)
     print(link)
     if ( ("–" in link) or (" " in link) ):
        return inlinks, outlinks
-    #print(parse.isParsable(link))
-    if (parse.isParsable(link)):
+    #if (parse.isParsable(link)):
     
-        if (parser==1):
-            html_page = parse.parse(link)
-            soup = parse.make_soup(html_page=html_page)
-            links = parse.get_links(soup)
-        else:
-            links=altparse.get_links(link)
+    if (parser==1):
+        t, html_page = parse.parse(link)
+        if (not t):
+            return inlinks, outlinks
+        soup = parse.make_soup(html_page=html_page)
+        links = parse.get_links(soup)
+    else:
+        t, html_page=altparse.parse(link)
+        if (not t):
+            return inlinks, outlinks
+        links=altparse.get_links(html_page)
+        
     
-        check = "{0.netloc}".format(urlsplit(link))
-        #print(check)
-        #print(check.count("."))
-        if (check.count(".")==2):
-            www, link2check, dom = check.split(".")
-        elif (check.count(".")==1):
-            #print("hello")
-            link2check, dom = check.split(".")
-        else:
-            www, link2check, blog, dom = check.split(".")
-    
-        for index in links:
-            index=str(index)
-            if ( (link2check in index) and (index[0:4]=='http') ):
-                inlinks.append(index)
-            elif(index[0:4]=='http'):
-                splited = urlsplit(index)
-                base = "{0.scheme}://{0.netloc}/".format(splited)
-                outlinks.append(base)
-        #outlinks=clean_links(outlinks,link)
-        outlinks=set(outlinks)
-        outlinks=list(outlinks)
-        print(outlinks)
-        inlinks=set(inlinks)
-        inlinks=list(inlinks)
+    for index in links:
+        index=str(index)
+        if ( (basetocheck in index) and (index[0:4]=='http') ):
+            inlinks.append(index)
+        elif(index[0:4]=='http'):
+            splited = urlsplit(index)
+            base = "{0.scheme}://{0.netloc}/".format(splited)
+            outlinks.append(base)
+        
+    outlinks=set(outlinks)
+    outlinks=list(outlinks)
+    print(outlinks)
+    inlinks=set(inlinks)
+    inlinks=list(inlinks)
     return inlinks, outlinks
 
 
@@ -64,15 +58,17 @@ def clean_links(outlinks, linkToCheck):   #merged in split_link
     return clear_outlinks
 
 
-def find_outlinks(link, checkin, n):
+def find_outlinks(link, checkin, basetocheck, n):
     inlinks = link
     inlinks2 = []
-    # outlink = []
-    inlinks, outlinks = split_links(link,1)
+    
+    if (n==1):
+        basetocheck=getBaseToCheck(link)
+        
+    inlinks, outlinks = split_links(link, basetocheck, 2)
     if n==1:
         print(len(inlinks))
-    # print(len(inlinks))
-    #print(outlinks)
+        
     if (n==1):
         if (len(inlinks)==0):
             checkin=False
@@ -85,7 +81,7 @@ def find_outlinks(link, checkin, n):
         # find_outlinks()
         count=count+1
         print(count)
-        ch, outlink = find_outlinks(i, checkin, n+1)
+        ch, outlink = find_outlinks(i, checkin, basetocheck, n+1)
         for j in outlink:
             if j not in outlinks:
                 # inlinks.append(j)
@@ -93,7 +89,26 @@ def find_outlinks(link, checkin, n):
     return checkin, outlinks
 
 
+def getBaseToCheck(link):
+    check = "{0.netloc}".format(urlsplit(link))
 
+    if (check.count(".")==2):
+        www, link2check, dom = check.split(".")
+    elif (check.count(".")==1):
+        link2check, dom = check.split(".")
+    elif (check.count(".")==3):
+        www, link2check, blog, dom = check.split(".")
+    else:
+        www, link2check, blog, bla, dom = check.split(".")
+    return link2check
+
+
+#link=
+#print(getBaseToCheck(link))
+#bs2ch=getBaseToCheck(link)
+#print(split_links(link, bs2ch, 1)[0])
+#in2, out = find_outlinks(link, False, bs2ch, 1)
+#print(out)
 #print(find_outlinks('http://www.sport24.gr/', len('http://www.sport24.gr/'), 1))
 #link='http://www.sport24.gr/'
 #print(clean_links(split_links('http://www.sport24.gr/', len('http://www.sport24.gr/'))[1],link))

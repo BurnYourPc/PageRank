@@ -7,13 +7,16 @@ import urllib.request as url
 
 def parse(urlToParse):
     html_page=[]
+    t=True
     try:
         html_page = url.urlopen(urlToParse)
     except HTTPError as e:
         print("Not a valid url")
+        t=False
     except URLError as e:
         print("Not a valid url")#, e.code)
-    return html_page
+        t=False
+    return t, html_page
 
 
 def isParsable(link):

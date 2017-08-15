@@ -1,6 +1,7 @@
 from src.parse import htmlParser as parse
 from src.purifier import purifier as pure
 from src.uniq_purifier import unqpurifier as unqpure
+import os
 import numpy as np
 from numpy import linalg as LA
 from copy import deepcopy
@@ -89,12 +90,60 @@ def getRank(A,n):
     return rnew
 
 
+def rankUrls(urls,n):
+    A=np.zeros((n,n), dtype=float)
+    urls2=urls
+    col=0
+    for link in urls:
+        basetocheck=unqpure.getBaseToCheck(link)
+        checkin, outlinks=unqpure.find_outlinks(link, False, basetocheck, 1)
+        print(outlinks)
+        if (checkin):
+            A[col,col]=1
+        counter=0
+        for otherLink in urls2:
+            if otherLink!=link:
+                counter=counter+1
+                if otherLink in outlinks:
+                    A[counter,col]=1
+        col=col+1
+    print(A)
+    A=getAready(A,n)
+    print(A)
+    A=removeSpiderTraps(A,n)
+    r=getRank(A,n)
+    print("The ranking of the sites' is:")
+    print(r)
+    return r
+
+
 #---------------------------------------------------------------------------#
 
 print("Welcome to BurnYourPc project of PageRank implementation..!")
-num=input("How many sites do you want to rank?")
-num=int(num)
-sitesGui(num)
-
+print(" ")
+answer=input("Sites in txt[1] or input-window[2]\n")
+answer=int(answer)
+path=os.path.dirname(os.path.abspath("."))
+if (answer==1):
+    input("Edit the 'sites.txt' in getRanking folder and press enter\n")
+    path2txt=path[0:len(path)-3]+'getRanking/sites.txt'
+    myfile = open(path2txt, 'r') 
+    urls=[]
+    counter=0
+    for line in myfile: 
+        counter=counter+1
+        site=line
+        site=site[0:(len(site)-1)]
+        urls.append(site)
+    print(urls)
+    ranking= rankUrls(urls,counter)
+    print(ranking)
+elif (answer==2):
+    num=input("How many sites do you want to rank?\n")
+    num=int(num)
+    sitesGui(num)
+else:
+    print(" ")
+    print("Wrong inputs! Try again..")
 
 

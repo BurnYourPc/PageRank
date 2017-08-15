@@ -3,9 +3,9 @@ from urllib.error import URLError
 import urllib.request as url
 import lxml.html
 
-def get_links(link):
+def get_links(html_page):
     #connection = url.urlopen(link)
-    html_page=parse(link)
+    #html_page=parse(link)
 
     dom =  lxml.html.fromstring(html_page.read())
     outlinks=[]
@@ -15,13 +15,16 @@ def get_links(link):
 
 def parse(urlToParse):
     html_page=[]
+    t=True
     try:
         html_page = url.urlopen(urlToParse)
     except HTTPError as e:
         print("Not a valid url")
+        t=False
     except URLError as e:
         print("Not a valid url")
+        t=False
     
-    return html_page
+    return t, html_page
 
 #Sprint(get_links('http://www.sport24.gr/'))
