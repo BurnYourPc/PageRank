@@ -1,3 +1,5 @@
 beautifulsoup4
 numpy
 tkinter
+pypdf2
+reportlab
