@@ -8,8 +8,10 @@ def split_links(link, basetocheck, parser):   #take your url, its base and the c
     outlinks = []
     link=str(link)
     print(link)
-    if ( ("–" in link) or (" " in link) ):      #otherwise is not parsable
+    if ( " " in link ):      #otherwise is not parsable    |||keep this -->("–")
        return inlinks, outlinks
+    if ( is_ascii(link) ):              #otherwise is not parsable
+        return inlinks, outlinks
     
     if (parser==1):
         t, html_page = parse.parse(link)
@@ -98,5 +100,17 @@ def getBaseToCheck(link):   #find base urls (for example: 'http://www.rt.com/ ba
     else:
         www, link2check, blog, bla, dom = check.split(".")
     return link2check
+
+
+
+
+def is_ascii(s):   # check if url have encoded a unicode string in ascii to be produced (non english characters for example or "–" (not "-") character)
+    isascii = len(s) != len(s.encode())
+    return isascii
+
+
+#d="http://.www.sport –24.gr/"
+
+#print(is_ascii(d))
 
 
