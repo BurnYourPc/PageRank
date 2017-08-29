@@ -1,6 +1,8 @@
 from src.parse import htmlParser as parse
 from src.altparse import alt_htmlparser as altparse
 from urllib.parse import urlsplit, urlunsplit
+from src.pagerankutils.utils import *
+from src.uniq_purifier import unqpurifier as un
 
 
 def split_links(link, parser):
@@ -28,6 +30,39 @@ def split_links(link, parser):
         else:
             outlinks.append(index)
     outlinks=clean_links(outlinks,link)
+    return inlinks, outlinks
+
+
+def split_links2(link, basetocheck, parser):  # take your url, its base and the chosen parser and find all inlinks and outlinks
+    inlinks = []
+    outlinks = []
+    link = str(link)
+    print(link)
+    if (" " in link):  # otherwise is not parsable    |||keep this -->("–")
+        return inlinks, outlinks
+    if is_ascii(link):  # otherwise is not parsable
+        return inlinks, outlinks
+    if parser == 1:
+        t, html_page = parse.parse(link)
+        if not t:  # checks if the url is parsable
+            return inlinks, outlinks
+        soup = parse.make_soup(html_page=html_page)
+        links = parse.get_links(soup)  # take inlinks and outlinks together in the same list
+    else:
+        t, html_page = altparse.parse(link)
+        if not t:  # checks if the url is parsable
+            return inlinks, outlinks
+        links = altparse.get_links(html_page)
+
+    for index in links:
+        index = str(index)
+        if ((basetocheck in index) and (index[0:4] == 'http')):  # check if it is inlink
+            inlinks.append(index)
+        elif (index[0:4] == 'http'):  # check if it is outlink
+            splited = urlsplit(index)
+            base = "{0.scheme}://{0.netloc}/".format(splited)  # clean the link
+            outlinks.append(base)
+    print(outlinks)
     return inlinks, outlinks
 
 
@@ -64,6 +99,34 @@ def find_outlinks(link, n):
             # inlinks.append(j)
             outlinks.append(j)
     return outlinks
+
+
+def find_outlinks2(link, checkin, basetocheck, n):
+    inlinks = link
+    inlinks2 = []
+
+    if (n == 1):
+        basetocheck = un.getBaseToCheck(link)  # take the base of your url
+
+    inlinks, outlinks = split_links2(link, basetocheck, 2)
+    if n == 1:
+        print(len(inlinks))
+
+    if (n == 1):  # check is only for the initial url and not its inlinks
+        if (len(inlinks) == 0):  # check if there are no inlinks
+            checkin = False
+        else:
+            checkin = True
+    if n == 2:  # only in the second recursive call (if you want to go deaper in inlinks increase the limit
+        return checkin, outlinks  # return the outlinks of the inlinks
+    count = 0
+    for i in inlinks:
+        count = count + 1
+        print(count)
+        ch, outlink = find_outlinks2(i, checkin, basetocheck, n + 1)
+        for j in outlink:
+            outlinks.append(j)  # add to the outlink list the outlink from an inlink
+    return checkin, outlinks  # this return statement occurs only if n==1 (initial url)
 
 
 

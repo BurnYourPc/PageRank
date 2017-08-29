@@ -3,12 +3,14 @@ from urllib.error import URLError
 import urllib.request as url
 import lxml.html
 
+
 def get_links(html_page):
-    dom =  lxml.html.fromstring(html_page.read())
+    dom = lxml.html.fromstring(html_page.read())
     outlinks=[]
     for link in dom.xpath('//a/@href'):
         outlinks.append(link)
     return outlinks
+
 
 def parse(urlToParse):
     html_page=[]

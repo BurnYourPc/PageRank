@@ -4,6 +4,7 @@ from src.uniq_purifier import unqpurifier as unqpure
 from src.createPdf import pdfcreator as PdfC
 import os
 import numpy as np
+from src.pagerankutils.utils import *
 from numpy import linalg as LA
 from copy import deepcopy
 from tkinter import *
@@ -54,10 +55,11 @@ def sitesGui(numSites):
         A=removeSpiderTraps(A,n)     #We gurantee that our graph is connected
         ranking=getRank(A,n)     #get the sites' ranking
         path=os.path.dirname(os.path.abspath("."))   #that's the path to .../PageRankImplementation/src
+        path = path + "/PageRankImplementation"
         print("The ranking of the sites' is:")
         print(ranking)
-        source=path+'/main'    #that's the path to .../PageRankImplementation/src/main
-        destination=path[0:len(path)-3]+'getRanking'   #that's the path to .../PageRankImplementation/getRanking
+        source=path   #that's the path to .../PageRankImplementation/src/main
+        destination=path+'/getRanking'   #that's the path to .../PageRankImplementation/getRanking
         PdfC.CreateRankPdf(ranking,urls,source,destination)    #call function to create pdf with your sites' ranking
         
     
@@ -66,61 +68,7 @@ def sitesGui(numSites):
     Button(text='give Sites', command=getSites).grid()
     mainloop()
     
-    
-def getAready(A,n):
-    for j in range(n):
-        nz=np.count_nonzero(A[:,j])
-        for i in range(n):
-            if (A[i,j]!=0):
-                A[i,j]=A[i,j]/nz
-    return A
 
-
-def removeSpiderTraps(A,n):
-    A=0.8*A
-    A2=np.zeros((n,n), dtype=float)
-    A2=(1/n)+A2
-    A2=0.2*A2
-    A=A+A2
-    return A
-
-
-def getRank(A,n):
-    r=np.zeros((n,1), dtype=float)
-    for i in range(n):
-        r[i]=1/n
-    rnew=np.dot(A,r)
-    while (LA.norm(rnew-r,2)>0.000001):
-        r=rnew
-        rnew=np.dot(A,rnew)
-    return rnew
-
-
-def rankUrls(urls,n):     #we do the same as in siteGui function
-    A=np.zeros((n,n), dtype=float)
-    urls2=urls
-    col=0
-    for link in urls:
-        basetocheck=unqpure.getBaseToCheck(link)
-        checkin, outlinks=unqpure.find_outlinks(link, False, basetocheck, 1)
-        print(outlinks)
-        if (checkin):
-            A[col,col]=1
-        counter=0
-        for otherLink in urls2:
-            if otherLink!=link:
-                counter=counter+1
-                if otherLink in outlinks:
-                    A[counter,col]=1
-        col=col+1
-    print(A)
-    A=getAready(A,n)
-    print(A)
-    A=removeSpiderTraps(A,n)
-    r=getRank(A,n)
-    print("The ranking of the sites' is:")
-    print(r)
-    return r
 
 
 #---------------------------------------------------------------------------#
@@ -130,25 +78,27 @@ print(" ")
 answer=input("Sites in txt[1] or input-window[2]\n")
 answer=int(answer)
 path=os.path.dirname(os.path.abspath("."))   #that's the path to .../PageRankImplementation/src
+path = path+"/PageRankImplementation"
 print(path)
 if (answer==1):
     input("Edit the 'sites.txt' in getRanking folder and press enter\n")
     path2txt=path[0:len(path)-3]+'getRanking/sites.txt'   #the path to the sites' txt
     myfile = open(path2txt, 'r') 
-    urls=[]
-    counter=0
+    urls = []
+    counter = 0
     for line in myfile: 
         counter=counter+1
         site=line
         site=site[0:(len(site)-1)]
         urls.append(site)             #append sites from txt in url list
     print(urls)
-    ranking= rankUrls(urls,counter)     #call function to compute the sites' ranking
+    ranking= rankUrls(urls, counter)     #call function to compute the sites' ranking
     print(ranking)
-    source=path+'/main'      #that's the path to .../PageRankImplementation/src/main
-    destination=path[0:len(path)-3]+'getRanking'     #that's the path to .../PageRankImplementation/getRanking
-    PdfC.CreateRankPdf(ranking,urls,source,destination)    #call function to create pdf with your sites' ranking
-elif (answer==2):
+    source = path      #that's the path to .../PageRankImplementation/src/main
+    destination = path + '/getRanking'     #that's the path to .../PageRankImplementation/getRanking
+    print(destination)
+    PdfC.CreateRankPdf(ranking, urls, source, destination)    #call function to create pdf with your sites' ranking
+elif (answer == 2):
     num=input("How many sites do you want to rank?\n")    #give number of sites you want to rank
     num=int(num)
     sitesGui(num)      #create a window for input urls
