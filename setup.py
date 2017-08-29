@@ -12,7 +12,7 @@ setup(
     version='0.1.0',
     description='Sample implementation of Page Rank Algorithm',
     long_description=readme,
-    author='Tolis Chal, Pantelispanka',
+    author='Tolis Chal, Pantelispanka, nikfot',
     author_email='burnyourpc@gmail.com',
     url='https://github.com/BurnYourPc',
     license=license,

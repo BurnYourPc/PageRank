@@ -1,0 +1,7 @@
+beautifulsoup4
+numpy
+pypdf2
+reportlab
+lxml
+bottle
+bottle-swagger
