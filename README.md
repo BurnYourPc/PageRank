@@ -10,4 +10,4 @@ You can give your list as a txt file or you can choose to open an input-window. 
 
 Save your txt in path/to/BurnYourPc/PageRankImplementation/getRanking folder.
 
-Our implementation parses all the web sites and constructs the corresponding directed graph. Each web site is a vertex and if web site A has an outbound link to web site B then there is a directed edge from vertex A to vertex B. Then the Page Rank algorithm is excecuted and a pdf with the ratings is generated in folder https://github.com/BurnYourPc/PageRankImplementation/tree/master/getRanking
+Our implementation parses all the web sites and constructs the corresponding directed graph. Each web site is a vertex and if web site A has an outbound link to web site B then there is a directed edge from vertex A to vertex B. Then the Page Rank algorithm is excecuted and a pdf with the ratings is generated in path/to/BurnYourPc/PageRankImplementation/getRanking folder.
